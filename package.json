@@ -1,14 +1,16 @@
 {
-  "name": "starter-template",
+  "name": "appwrite-sms-function",
   "version": "1.0.0",
-  "description": "",
+  "description": "Appwrite function to send an SMS using Twilio",
   "main": "src/main.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
     "format": "prettier --write ."
   },
   "dependencies": {
-    "node-appwrite": "^9.0.0"
+    "node-appwrite": "^9.0.0",
+    "twilio": "^4.22.0"
   },
   "devDependencies": {
     "prettier": "^3.0.0"

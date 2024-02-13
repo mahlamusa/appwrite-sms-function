@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Appwrite function to send an SMS using Twilio",
   "main": "src/main.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js",
     "format": "prettier --write ."

@@ -8,7 +8,7 @@ const twilio = require("twilio")(accountSid, authToken);
 
 const payload = JSON.parse(process.env.APPWRITE_FUNCTION_DATA);
 
-export default async ({ req, res, log, error }) => {
+module.exports = async ({ req, res, log, error }) => {
   const { receiver, message } = req.body;
 
   if (!receiver) {

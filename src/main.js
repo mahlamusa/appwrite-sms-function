@@ -1,33 +1,51 @@
-import { Client } from 'node-appwrite';
+const { Client, Databases } = require("node-appwrite");
 
-// This is your Appwrite function
-// It's executed each time we get a request
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const senderPhone = process.env.TWILIO_PHONE_NUMBER;
+
+const twilio = require("twilio")(accountSid, authToken);
+
+const payload = JSON.parse(process.env.APPWRITE_FUNCTION_DATA);
+
 export default async ({ req, res, log, error }) => {
-  // Why not try the Appwrite SDK?
-  //
-  // const client = new Client()
-  //    .setEndpoint('https://cloud.appwrite.io/v1')
-  //    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-  //    .setKey(process.env.APPWRITE_API_KEY);
+  const { receiver, message } = req.body;
 
-  // You can log messages to the console
-  log('Hello, Logs!');
-
-  // If something goes wrong, log an error
-  error('Hello, Errors!');
-
-  // The `req` object contains the request data
-  if (req.method === 'GET') {
-    // Send a response with the res object helpers
-    // `res.send()` dispatches a string back to the client
-    return res.send('Hello, World!');
+  if (!receiver) {
+    res.status(400).send("Bad Request. Receiver number not provided.");
+    return;
   }
 
-  // `res.json()` is a handy helper for sending JSON
-  return res.json({
-    motto: 'Build like a team of hundreds_',
-    learn: 'https://appwrite.io/docs',
-    connect: 'https://appwrite.io/discord',
-    getInspired: 'https://builtwith.appwrite.io',
-  });
+  if (!message) {
+    res.status(400).send("Bad Request. A message was not provided.");
+    return;
+  }
+
+  if (req.method != "POST") {
+    res.status(405).send("Method Not Allowed");
+    return;
+  }
+
+  twilio.messages
+    .create({
+      body: message,
+      from: senderPhone,
+      to: receiver,
+    })
+    .then((response) => {
+      // Return the response after sending it
+      return res.json({
+        ok: true,
+        message: "SMS sent successfully.",
+        data: response.body,
+      });
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        ok: false,
+        message: "Failed to send SMS.",
+        error: error,
+      });
+    });
 };
+

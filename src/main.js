@@ -1,10 +1,11 @@
-const { Client, Databases } = require("node-appwrite");
+import { Client, Databases } from "node-appwrite";
+import {twilioClient} from "twilio";
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const senderPhone = process.env.TWILIO_PHONE_NUMBER;
 
-const twilio = require("twilio")(accountSid, authToken);
+const twilio = twilioClient(accountSid, authToken);
 
 const payload = JSON.parse(process.env.APPWRITE_FUNCTION_DATA);
 
